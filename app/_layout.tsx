@@ -1,37 +1,37 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import { StyleSheet, Text, View } from 'react-native'
+import {Slot, Stack} from 'expo-router'
+import { NativeWindStyleSheet } from "nativewind";
+import {DateProvider} from '../context/DateContext';
+import {FinanceProvider} from '../context/FinanceContext';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+NativeWindStyleSheet.setOutput({
+  default: "native",
+});
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
+const RootLayout = () => {
+  
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
-  );
+    <DateProvider>
+      <FinanceProvider>
+   <Stack>
+    <Stack.Screen
+      name="index"
+      options={{
+        headerShown: true,
+        title: 'Expense Tracker', // Set the header title
+        headerStyle: {
+          backgroundColor: '#4545a3', // Customize the background color
+        },
+        headerTitleStyle: {
+          color: '#fff', // Customize the title color
+          fontWeight: 'bold', // Make the title bold
+        },
+      }}
+    />
+   </Stack>
+   </FinanceProvider>
+   </DateProvider>
+  )
 }
+
+export default RootLayout
